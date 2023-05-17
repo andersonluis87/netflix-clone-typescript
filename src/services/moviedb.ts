@@ -1,12 +1,8 @@
 import { Movie, MovieList } from '../defs'
-
-const API_KEY = import.meta.env.VITE_MOVIEDB_API_KEY
-const API_BASE = 'https://api.themoviedb.org/3/'
-const LANGUAGE = 'pt-BR'
-const NETFLIX_NETWORK_PARAM = 'with_network=213'
+import { constants } from '../constants'
 
 const basicFetch = async (endpoint: string) => {
-  const req = await fetch(`${API_BASE}${endpoint}`)
+  const req = await fetch(`${constants.MOVIEDB_API_URL}${endpoint}`)
   const json = await req.json()
 
   return json
@@ -19,86 +15,70 @@ export const moviedb = {
         slug: 'originals',
         title: 'Originais do Netflix',
         items: await basicFetch(
-          `discover/tv?${NETFLIX_NETWORK_PARAM}&language=${LANGUAGE}&api_key=${API_KEY}`
+          `discover/tv?${constants.MOVIEDB_NETFLIX_TV_ID}&${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'trending',
         title: 'Recomendados para Você',
         items: await basicFetch(
-          `trending/all/week?language=${LANGUAGE}&api_key=${API_KEY}`
+          `trending/all/week?${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'toprated',
         title: 'Em Alta',
         items: await basicFetch(
-          `movie/top_rated?language=${LANGUAGE}&api_key=${API_KEY}`
+          `movie/top_rated?${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'action',
         title: 'Ação',
         items: await basicFetch(
-          `discover/movie?with_genres=28&language=${LANGUAGE}&api_key=${API_KEY}`
+          `discover/movie?with_genres=28&${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'comedy',
         title: 'Comédia',
         items: await basicFetch(
-          `discover/movie?with_genres=35&language=${LANGUAGE}&api_key=${API_KEY}`
+          `discover/movie?with_genres=35&${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'horror',
         title: 'Terror',
         items: await basicFetch(
-          `discover/movie?with_genres=27&language=${LANGUAGE}&api_key=${API_KEY}`
+          `discover/movie?with_genres=27&${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'romance',
         title: 'Romance',
         items: await basicFetch(
-          `discover/movie?with_genres=10749&language=${LANGUAGE}&api_key=${API_KEY}`
+          `discover/movie?with_genres=10749&${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
       {
         slug: 'documentary',
         title: 'Documentários',
         items: await basicFetch(
-          `discover/movie?with_genres=99&language=${LANGUAGE}&api_key=${API_KEY}`
+          `discover/movie?with_genres=99&${constants.MOVIEDB_API_CONFIGS}`
         ),
       },
     ]
   },
-  getMovieInfo: async (id: number, type: string): Promise<Movie> => {
-    let info
-
-    if (id) {
-      switch (type) {
-        case 'movie':
-          info = await basicFetch(
-            `movie/${id}?language=${LANGUAGE}&api_key=${API_KEY}`
-          )
-          break
-        case 'tv':
-          info = await basicFetch(
-            `tv/${id}?language=${LANGUAGE}&api_key=${API_KEY}`
-          )
-          break
-        default:
-          info = {}
-      }
-    }
+  getMovieInfo: async (id: number, type: 'movie' | 'tv'): Promise<Movie> => {
+    let info = await basicFetch(
+      `${type}/${id}?${constants.MOVIEDB_API_CONFIGS}`
+    )
 
     //handling media type movie that does not contain such attribute
     if (type === 'tv' && info?.success === false) {
-      info = await basicFetch(
-        `movie/${id}?language=${LANGUAGE}&api_key=${API_KEY}`
-      )
+      info = await basicFetch(`movie/${id}?${constants.MOVIEDB_API_CONFIGS}`)
     }
+
     return info
   },
 }

@@ -24,6 +24,13 @@ function App() {
     loadAll()
   }, [])
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+
   const setFeaturedMovie = async (featuredMovie: Movie) => {
     const mediaType = featuredMovie?.media_type === 'movie' ? 'movie' : 'tv'
     const featuredMovieInfo = await moviedb.getMovieInfo(
@@ -32,6 +39,7 @@ function App() {
     )
 
     setFeaturedData(featuredMovieInfo)
+    scrollToTop()
   }
 
   const setRandomFeaturedMovie = (list: MovieList[]) => {
@@ -40,7 +48,6 @@ function App() {
       Math.random() * (originals[0].items.results.length - 1)
     )
     const featuredMovie = originals[0].items.results[randomItem]
-
     setFeaturedMovie(featuredMovie)
   }
 
