@@ -1,7 +1,7 @@
 # Netflix Home Page Clone
 This repository contains a Netflix home page clone created using React, TypeScript, SASS, and Material UI Icons. The application utilizes the [TMDB API](https://developer.themoviedb.org/docs) to fetch a list of movies and display them based on different categories.
 
-![Netflix Home Page Clone](https://raw.githubusercontent.com/andersonluis87/netflix-clone-typescript/master/images/navigation-example.gif)
+![Netflix Home Page Clone](https://raw.githubusercontent.com/andersonluis87/netflix-clone-typescript/master/images/navigation.gif)
 
 
 
